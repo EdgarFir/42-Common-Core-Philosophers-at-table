@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edgar <edfreder@student.42porto.com>       +#+  +:+       +#+        */
+/*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:44:35 by edgar             #+#    #+#             */
-/*   Updated: 2025/07/25 21:50:30 by edgar            ###   ########.fr       */
+/*   Updated: 2025/07/28 00:28:47 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@
 // argv[0] -> number_of_philosophers, argv[1] -> time_to_die, argv[2] -> time_to_eat, argv[3] -> time_to_sleep
 int main(int argc, char **argv)
 {
-    if (argc != 5)
-    {
-        write(2, "Usage: ./philo n_philo time_to_die time_to_eat time_to_sleep\n", 62);
-        return (ARGSERR);
-    }
-    // Start threads
-    // 
+	t_simulation_data sim;
+
+	memset(&sim, 0, sizeof(t_simulation_data));
+  if (is_not_a_valid_sim(argc, argv, &sim))
+	  return (sim.sim_err);
+    // Validate arguments.
+	
 }
