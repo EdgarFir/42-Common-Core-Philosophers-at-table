@@ -1,7 +1,7 @@
 NAME = philo
 
-SRCS = philo.c philo_validator.c philo_utils.c philo_threads.c philo_routine.c \
-	   philo_logger.c
+SRCS = philo_cleaner.c philo_logger.c philo_mutex.c philo_routine.c \
+	   philo_threads.c philo_utils.c philo_validator.c philo.c
 
 OBJS = ${SRCS:.c=.o}
 

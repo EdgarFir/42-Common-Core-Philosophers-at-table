@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:09:01 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/29 01:40:59 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/29 23:06:38 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int  is_dead(t_philo *philo)
     curr_time = get_timestamp_ms();
     if (!philo->last_time_eated)
         philo->last_time_eated = philo->sim->start_time_ms;
-    if (curr_time - philo->sim->start_time_ms > philo->sim->time_to_die)
+    if (curr_time - philo->last_time_eated > philo->sim->time_to_die)
     {
         pthread_mutex_lock(&philo->dead_mutex);
         philo->died = 1;
@@ -38,16 +38,21 @@ static int  is_dead(t_philo *philo)
 
 static int  time_to_eat(t_philo *philo)
 {
-    // Check if actual time - last meal time not higher than time to die, else is dead
-   
-    // Take the forks
+    if (is_dead(philo))
+        return (-1);
+    // Lock first fork
     pthread_mutex_lock(philo->fork1);
+    log_message(philo, TAKE_FORK);
+    // Lock second fork
     pthread_mutex_lock(philo->fork2);
+    log_message(philo, TAKE_FORK);
     log_message(philo, EAT);
+    philo->last_time_eated = get_timestamp_ms();
+    usleep(philo->sim->time_to_eat * 1000);
+    // Passar o tempo
     pthread_mutex_unlock(philo->fork1);
     pthread_mutex_unlock(philo->fork2);
     // Update last time philosopher eated
-    philo->last_time_eated = get_timestamp_ms();
     // Lock times eated mutex
     pthread_mutex_lock(&philo->times_eated_mutex);
     philo->times_eated++; // Must unlock because monitor(thread) will access this value
@@ -56,14 +61,30 @@ static int  time_to_eat(t_philo *philo)
     return (0);
 }
 
+int sim_not_end(t_simulation_data *sim)
+{
+    pthread_mutex_lock(&sim->sim_end_mutex);
+    if (sim->sim_end == 1)
+    {
+        pthread_mutex_unlock(&sim->sim_end_mutex);
+        return (1);
+    }
+    pthread_mutex_unlock(&sim->sim_end_mutex);
+    return (0);
+}
+
 void    *routine(void *arg)
 {
     t_philo         *philo;
 
     philo = (t_philo *)arg;
-    log_message(philo, THINK);
-    if (time_to_eat(philo) == -1)
-        return (NULL);
-    time_to_sleep(philo);
+    while (!sim_not_end(philo->sim))
+    {
+        log_message(philo, THINK);
+        if (time_to_eat(philo) == -1)
+            return (NULL);
+        time_to_sleep(philo);
+        usleep(philo->sim->time_to_sleep * 1000);
+    }
     return (arg);
 }
