@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 23:20:20 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/28 00:31:22 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/28 20:51:09 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	is_a_valid_number(char *nbr)
 	return (1);
 }
 
-int	is_not_a_valid_sim(int argc, char **argv, t_simulation_data *sim)
+int	is_not_a_valid_sim(t_simulation_data *sim, int argc, char **argv)
 {
 	int			i;
 	long long	number;

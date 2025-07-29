@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 00:25:07 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/28 00:27:38 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/28 22:53:40 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,13 @@ long long	ft_atoll(char *nbr)
 		i++;
 	}
 	return (result * signal);
+}
+
+long	get_timestamp_ms(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (-1);
+	return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
