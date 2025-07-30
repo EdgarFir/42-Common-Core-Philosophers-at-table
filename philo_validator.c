@@ -6,13 +6,13 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 23:20:20 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/28 20:51:09 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 00:06:31 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	return_args_err_msg(t_simulation_data *sim, char *arg, int error)
+static int	return_args_err_msg(t_simulation_data *sim, char *arg, int error)
 {
 	if (error == ARGS_COUNT_ERR)
 		write(2, "Usage: ./philo n_philo time_to_die time_to_eat time_to_sleep\n", 62);
@@ -34,7 +34,7 @@ int	return_args_err_msg(t_simulation_data *sim, char *arg, int error)
 	return (error);
 }
 
-int	is_a_valid_number(char *nbr)
+static int	is_a_valid_number(char *nbr)
 {
 	int	i;
 

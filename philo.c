@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:44:35 by edgar             #+#    #+#             */
-/*   Updated: 2025/07/29 23:54:26 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 16:39:47 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,44 +19,6 @@
 */
 
 #include "philo.h"
-
-void    *monitor(void *arg)
-{
-    t_philo *philos;
-    int     i;
-    int     nbr_of_philos;
-
-    philos = (t_philo *)arg;
-    i = 0;
-    nbr_of_philos = philos->sim->nbr_of_philosophers;
-    while (1)
-    {
-        pthread_mutex_lock(&philos[i % nbr_of_philos].dead_mutex);
-        if (philos[i % nbr_of_philos].died == 1)
-        {
-            pthread_mutex_unlock(&philos[i % nbr_of_philos].dead_mutex);
-            pthread_mutex_lock(&philos->sim->sim_end_mutex);
-            philos->sim->sim_end = 1;
-            pthread_mutex_unlock(&philos->sim->sim_end_mutex);
-            log_message(&philos[i % nbr_of_philos], DEAD);
-            break ;
-        }
-        pthread_mutex_unlock(&philos[i % nbr_of_philos].dead_mutex);
-        i++;
-    }
-    return (arg);
-}
-
-int init_sim(t_simulation_data *sim, t_philo *philos)
-{
-    sim->start_time_ms = get_timestamp_ms();
-    if (create_threads(sim, philos) == THREADS_CREATE_FAIL)
-        return (THREADS_CREATE_FAIL);
-    if (pthread_create(&sim->monitor_th, NULL, &monitor, &philos[0]) != 0)
-       return (THREADS_CREATE_FAIL);
-    sim->monitor_thread_initialized = 1;
-    return (0);
-}
 
 int main(int argc, char **argv)
 {

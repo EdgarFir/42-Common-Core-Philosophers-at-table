@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 23:09:41 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/30 00:00:29 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:00:51 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	destroy_philos_mutexes(t_philo *philos)
 			pthread_mutex_destroy(&philos[i].dead_mutex);
 		if (philos[i].times_eated_mutex_initialized == 1)
 			pthread_mutex_destroy(&philos[i].times_eated_mutex);
+		if (philos[i].last_time_eated_mutex_initialized == 1)
+			pthread_mutex_destroy(&philos[i].last_time_eated_mutex);
 		i++;
 	}
 }
@@ -62,7 +64,6 @@ void	clean_philos(t_philo *philos, int philos_count)
 			pthread_join(philos[i].th, NULL);
 		i++;
 	}
-	free(philos);
 }
 
 int	clean_all(t_simulation_data *sim, t_philo *philos, int exit_status)
@@ -72,5 +73,6 @@ int	clean_all(t_simulation_data *sim, t_philo *philos, int exit_status)
 		pthread_join(sim->monitor_th, NULL);
 	destroy_sim_mutexes(sim);
 	destroy_philos_mutexes(philos);
+	free(philos);
 	return (exit_status);
 }

@@ -1,13 +1,13 @@
 NAME = philo
 
-SRCS = philo_cleaner.c philo_logger.c philo_mutex.c philo_routine.c \
-	   philo_threads.c philo_utils.c philo_validator.c philo.c
+SRCS = philo_cleaner.c philo_mutex.c philo_routine.c philo_simulation.c \
+	   philo_utils.c philo_validator.c philo.c
 
 OBJS = ${SRCS:.c=.o}
 
 CC = cc
 
-#CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -pthread
 
 RM = rm -rf
 

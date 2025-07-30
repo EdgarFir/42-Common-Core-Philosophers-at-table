@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:45:19 by edgar             #+#    #+#             */
-/*   Updated: 2025/07/29 23:55:48 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:00:30 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,13 @@ typedef struct	s_philo
 	int					died;
 	int					times_eated_mutex_initialized;
 	int					dead_mutex_initialized;
+	int					last_time_eated_mutex_initialized;
 	int					thread_initialized;
 	long				last_time_eated;
 	pthread_t			th;
 	pthread_mutex_t		times_eated_mutex;
 	pthread_mutex_t		dead_mutex;
+	pthread_mutex_t		last_time_eated_mutex;
 	pthread_mutex_t		*fork1;
 	pthread_mutex_t		*fork2;
 	t_simulation_data	*sim;
@@ -85,17 +87,18 @@ typedef struct	s_philo
 long long	ft_atoll(char *nbr);
 int			ft_strlen(char *str);
 long		get_timestamp_ms(void);
+void		log_message(t_philo *philo, int log_type);
+void		my_usleep(long time_ms, t_philo *philo);
 /* Validator */
 int			is_not_a_valid_sim(t_simulation_data *sim, int argc, char **argv);
-/* Threads */
-int			create_threads(t_simulation_data *sim, t_philo *philos);
 /* Routine */
 void 		*routine(void *arg);
-/* Logger */
-void		log_message(t_philo *philo, int log_type);
+int			sim_end(t_simulation_data *sim);
 /* Mutexes */
 int			init_mutexes(t_simulation_data *sim, t_philo *philos);
 /* Cleaner */
 int			clean_all(t_simulation_data *sim, t_philo *philos, int exit_status);
+/* Simulation */
+int			init_sim(t_simulation_data *sim, t_philo *philos);
 
 #endif 

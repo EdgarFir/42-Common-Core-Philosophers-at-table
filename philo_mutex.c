@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 22:45:58 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/29 23:55:35 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:11:47 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ static int init_philos_mutexes(t_philo *philos, int philos_count)
         if (pthread_mutex_init(&philos[i].times_eated_mutex, NULL) == -1)
             return (MUTEX_INIT_FAIL);
         philos[i].times_eated_mutex_initialized = 1;
+        if (pthread_mutex_init(&philos[i].last_time_eated_mutex, NULL) == -1)
+            return (MUTEX_INIT_FAIL);
+        philos[i].last_time_eated_mutex_initialized = 1;
         i++;
     }
     return (0);
