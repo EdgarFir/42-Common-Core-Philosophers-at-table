@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 00:07:10 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/30 19:12:36 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:47:08 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,29 @@ static int  is_dead(t_philo *philo)
     return (0);
 }
 
+int all_ate(t_philo *philos, int must_eat_times)
+{
+    int nbr_of_philos;
+    int i;
+
+    if (!must_eat_times)
+        return (0);
+    nbr_of_philos = philos->sim->nbr_of_philosophers;
+    i = 0;
+    while (i < nbr_of_philos)
+    {
+        pthread_mutex_lock(&philos[i].times_eated_mutex);
+        if (philos[i].times_eated != must_eat_times)
+        {
+            pthread_mutex_unlock(&philos[i].times_eated_mutex);
+            return (0);
+        }
+        pthread_mutex_unlock(&philos[i].times_eated_mutex);
+        i++;
+    }
+    return (1);
+}
+
 static void    *monitor(void *arg)
 {
     t_philo *philos;
@@ -58,6 +81,13 @@ static void    *monitor(void *arg)
     max_index = philos->sim->nbr_of_philosophers;
     while (1)
     {
+        if (all_ate(&philos[0], philos->sim->must_eat_times))
+        {
+            pthread_mutex_lock(&philos->sim->sim_end_mutex);
+            philos->sim->sim_end = 1;
+            pthread_mutex_unlock(&philos->sim->sim_end_mutex);
+            return (NULL);
+        }
         if (is_dead(&philos[i % max_index]))
         {
             pthread_mutex_lock(&philos->sim->sim_end_mutex);
@@ -66,8 +96,8 @@ static void    *monitor(void *arg)
             log_message(&philos[i % max_index], DEAD);
             return (NULL);
         }
+        usleep(100);
         i++;
-        usleep(10);
     }
     return (arg);
 }

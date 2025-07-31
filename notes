@@ -59,3 +59,6 @@ The specific rules for the mandatory part are:
 philosophers, each philosopher has a fork on their left side and a fork on their right
 side. If there is only one philosopher, they will have access to just one fork.
 • To prevent philosophers from duplicating forks, you should protect each fork’s state
+
+5 800 200 200 10
+5 610 200 200 10

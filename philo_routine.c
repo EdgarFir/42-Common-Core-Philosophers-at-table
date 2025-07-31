@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:09:01 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/30 19:02:15 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:49:32 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ void    *routine(void *arg)
         my_usleep(philo->sim->time_to_eat * 0.03, philo);
     while (!sim_end(philo->sim))
     {
+        pthread_mutex_lock(&philo->times_eated_mutex);
+        if (philo->sim->must_eat_times && philo->sim->must_eat_times == philo->times_eated)
+        {
+            pthread_mutex_unlock(&philo->times_eated_mutex);
+            return (NULL);
+        }
+        pthread_mutex_unlock(&philo->times_eated_mutex);
         if (!sim_end(philo->sim))
             log_message(philo, THINK);
         if (time_to_eat(philo) == -1)

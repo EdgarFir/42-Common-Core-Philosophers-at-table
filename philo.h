@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:45:19 by edgar             #+#    #+#             */
-/*   Updated: 2025/07/30 19:00:30 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/30 23:55:03 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ typedef enum s_log_types
 # define ARGS_EMPTY_ERR 2
 # define ARGS_INV_NBR_ERR 3
 # define ARGS_NEG_NULL_NBR_ERR 4
-# define MEM_FAIL 5
-# define THREADS_FINISH_FAIL 6
-# define THREADS_CREATE_FAIL 7
-# define MUTEX_INIT_FAIL 8
+# define NBR_PHILOS_ERR 5
+# define TIME_MIN_VALUE_ERROR 6
+# define MEM_FAIL 7
+# define THREADS_FINISH_FAIL 8
+# define THREADS_CREATE_FAIL 9
+# define MUTEX_INIT_FAIL 10
 
 typedef struct	s_simulation_data
 {
@@ -49,8 +51,8 @@ typedef struct	s_simulation_data
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				must_eat_times;
 	int				sim_err;
-	int				nbr_philo_has_eaten;
 	int				sim_end;
 	int				log_mutex_initialized;
 	int				sim_end_mutex_initialized;
