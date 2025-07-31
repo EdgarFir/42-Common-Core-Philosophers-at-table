@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 00:07:10 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/31 00:47:08 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 15:12:23 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ static int  is_dead(t_philo *philo)
 {
     long    curr_time;
 
+    pthread_mutex_lock(&philo->times_eated_mutex);
+    if (philo->sim->must_eat_times 
+        && (philo->sim->must_eat_times == philo->times_eated))
+    {
+        pthread_mutex_unlock(&philo->times_eated_mutex);
+        return (0);
+    }
+    pthread_mutex_unlock(&philo->times_eated_mutex);
     curr_time = get_timestamp_ms();
     pthread_mutex_lock(&philo->last_time_eated_mutex);
     if (!philo->last_time_eated)
@@ -111,14 +119,19 @@ void    sit_philos_at_table(t_simulation_data *sim, t_philo *philos)
     {
         philos[i].id = i + 1;
         philos[i].sim = sim;
-        if (i != sim->nbr_of_philosophers - 1)
+        if (i == 0)
         {
             philos[i].fork1 = &sim->forks[i];
-            philos[i].fork2 = &sim->forks[i + 1];
+            philos[i].fork2 = &sim->forks[sim->nbr_of_philosophers - 1];
+        }
+        else if (i != sim->nbr_of_philosophers - 1)
+        {
+            philos[i].fork1 = &sim->forks[i];
+            philos[i].fork2 = &sim->forks[i - 1];
         }
         else
         {
-            philos[i].fork1 = &sim->forks[(i + 1) % sim->nbr_of_philosophers];
+            philos[i].fork1 = &sim->forks[i - 1];
             philos[i].fork2 = &sim->forks[i];
         }
         i++;

@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 23:09:41 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/31 00:48:24 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:59:42 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	clean_all(t_simulation_data *sim, t_philo *philos, int exit_status)
 		pthread_join(sim->monitor_th, NULL);
 	destroy_sim_mutexes(sim);
 	destroy_philos_mutexes(philos);
-	for (int i = 0; i < 4; i++)
-		printf("%d ", philos[i].times_eated);
+	// for (int i = 0; i < 4; i++)
+	// 	printf("%d ", philos[i].times_eated);
 	free(philos);
 	return (exit_status);
 }

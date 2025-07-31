@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 00:25:07 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/30 16:05:06 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 11:39:39 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,6 @@ void my_usleep(long time_ms, t_philo *philo)
 	long start;
 
 	start = get_timestamp_ms();
-	//current = get_timestamp_ms();
 	while (get_timestamp_ms() - start < time_ms && !sim_end(philo->sim))
-	{
-		if (sim_end(philo->sim))
-			break;
 		usleep(100);
-	}
 }

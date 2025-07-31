@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:09:01 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/31 00:49:32 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/07/31 15:20:10 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ static int  time_to_eat(t_philo *philo)
     pthread_mutex_unlock(philo->fork2);
     pthread_mutex_lock(&philo->times_eated_mutex);
     philo->times_eated++;
+    if (philo->sim->must_eat_times && philo->times_eated == philo->sim->must_eat_times)
+    {
+        pthread_mutex_unlock(&philo->times_eated_mutex);
+        return (-1);
+    }
     pthread_mutex_unlock(&philo->times_eated_mutex);
     return (0);
 }
@@ -72,6 +77,8 @@ void    *routine(void *arg)
         pthread_mutex_unlock(&philo->times_eated_mutex);
         if (!sim_end(philo->sim))
             log_message(philo, THINK);
+        if (philo->sim->nbr_of_philosophers == 1)
+            return (NULL);
         if (time_to_eat(philo) == -1)
             return (NULL);
         if (sim_end(philo->sim))
