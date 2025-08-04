@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 23:20:20 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/01 13:06:30 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/02 00:06:06 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	is_a_valid_number(char *nbr)
 static void	add_sim_data(t_simulation_data *sim, int argv_index, int value)
 {
 	if (argv_index == 1)
-		sim->nbr_of_philosophers = value;
+		sim->philo_c = value;
 	else if (argv_index == 2)
 		sim->time_to_die = value;
 	else if (argv_index == 3)

@@ -1,6 +1,7 @@
-NAME = philo_bonus philo_validator.c
+NAME = philo_bonus
 
-SRCS = philo_bonus.c
+SRCS = philo_bonus.c philo_utils_bonus.c philo_validator_bonus.c philo_simulation_bonus.c \
+	   philo_semaphores_bonus.c philo_sem_name_bonus.c philo_monitors_bonus.c
 
 OBJS = ${SRCS:.c=.o}
 
