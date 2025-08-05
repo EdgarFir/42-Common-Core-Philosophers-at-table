@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 00:32:02 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/02 19:40:04 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:15:29 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 # define PHILO_BONUS_H
 
-#include <fcntl.h>
-#include <semaphore.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/time.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <signal.h>
-#include <pthread.h>
+# include <fcntl.h>
+# include <semaphore.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+# include <sys/time.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <errno.h>
+# include <signal.h>
+# include <pthread.h>
 
 # define RED     "\033[0;31m"
 # define RESET   "\033[0m"
@@ -48,9 +48,9 @@ typedef enum s_log_types
 # define MEM_FAIL 7
 # define SEM_INIT_ERR 8
 
-struct s_philo;
+struct	s_philo;
 
-typedef struct	s_simulation_data
+typedef struct s_simulation_data
 {
 	int				philo_c;
 	int				time_to_die;
@@ -64,9 +64,9 @@ typedef struct	s_simulation_data
 	sem_t			*dead;
 	sem_t			*eat_c;
 	struct s_philo	*philos;
-} t_simulation_data;
+}	t_sim_data;
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	int					id;
 	int					died;
@@ -75,11 +75,13 @@ typedef struct	s_philo
 	long				last_meal_eaten;
 	char				*lm_sem_name;
 	char				*mc_sem_name;
+	char				*f_din_sem_n;
 	pid_t				philo_pid;
 	sem_t				*lm_sem;
-	sem_t				*mc_sem; 
-	t_simulation_data	*sim;
-} t_philo;
+	sem_t				*mc_sem;
+	sem_t				*f_din_sem;
+	t_sim_data			*sim;
+}	t_philo;
 
 /* Utils */
 long long	ft_atoll(char *nbr);
@@ -88,15 +90,16 @@ long		get_timestamp_ms(void);
 void		log_message(t_philo *philo, int log_type);
 void		my_usleep(long time_ms);
 /* Semaphores */
-void		init_sim_semaphores(t_simulation_data *sim);
-void		close_sim_semaphores(t_simulation_data *sim);
+void		init_sim_semaphores(t_sim_data *sim);
+void		close_sim_semaphores(t_sim_data *sim);
 void		unlink_sim_semaphores(void);
 void		open_philo_semaphores(t_philo *philo);
 /* Validator */
-int			is_not_a_valid_sim(t_simulation_data *sim, int argc, char **argv);
+int			is_not_a_valid_sim(t_sim_data *sim, int argc, char **argv);
+void		set_dinner_end(t_philo *philo);
 /* Simulation */
-void		init_sim(t_simulation_data *sim, t_philo *philos);
-void		exit_and_clean(t_simulation_data *sim, t_philo *philos, int exstatus, int unlink);
+void		init_sim(t_sim_data *sim, t_philo *philos);
+void		exit_clean(t_sim_data *sim, t_philo *philos, int exstatus);
 /* Sem_name */
 char		*get_sem_name(char *sem_type, t_philo *philo);
 /* Monitors */

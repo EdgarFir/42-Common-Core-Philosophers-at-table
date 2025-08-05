@@ -6,45 +6,40 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:04:42 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/03 00:09:51 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:06:47 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	exit_and_clean(t_simulation_data *sim, t_philo *philos, int exstatus, int unlink)
+void	exit_clean(t_sim_data *sim, t_philo *philos, int exstatus)
 {
 	int	i;
 
 	i = 0;
-	if (unlink)
-	{
-		close_sim_semaphores(sim);
-		unlink_sim_semaphores();
-	}
+	close_sim_semaphores(sim);
+	unlink_sim_semaphores();
 	while (i < sim->philo_c)
 	{
-		if (unlink)
-		{
-			sem_close(philos[i].lm_sem);
-			if (philos[i].lm_sem_name)
-				sem_unlink(philos[i].lm_sem_name);
-		}
-		if (philos[i].lm_sem_name)
-			free(philos[i].lm_sem_name);
+		sem_close(philos[i].f_din_sem);
+		sem_unlink(philos[i].f_din_sem_n);
+		sem_close(philos[i].lm_sem);
+		sem_unlink(philos[i].lm_sem_name);
+		free(philos[i].f_din_sem_n);
+		free(philos[i].lm_sem_name);
 		i++;
 	}
 	free(philos);
 	exit(exstatus);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_simulation_data   sim;
-	t_philo				*philos;
+	t_sim_data		sim;
+	t_philo			*philos;
 
-	memset(&sim, 0, sizeof(t_simulation_data));
-    if (is_not_a_valid_sim(&sim, argc, argv))
+	memset(&sim, 0, sizeof(t_sim_data));
+	if (is_not_a_valid_sim(&sim, argc, argv))
 		return (sim.sim_err);
 	init_sim_semaphores(&sim);
 	philos = malloc(sizeof(t_philo) * sim.philo_c);
@@ -53,5 +48,5 @@ int main(int argc, char **argv)
 	memset(philos, 0, sizeof(t_philo) * sim.philo_c);
 	sim.philos = philos;
 	init_sim(&sim, philos);
-	exit_and_clean(&sim, philos, 0, 1);
+	exit_clean(&sim, philos, 0);
 }

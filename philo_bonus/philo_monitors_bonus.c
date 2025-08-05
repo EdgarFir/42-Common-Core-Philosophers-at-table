@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 19:02:43 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/02 23:56:26 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:57:45 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,20 @@ int	is_dead(t_philo *philo)
 
 void	*death_monitor(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	while (1)
 	{
+		sem_wait(philo->f_din_sem);
+		if (philo->already_ate == 1)
+		{
+			sem_post(philo->f_din_sem);
+			return (NULL);
+		}
+		sem_post(philo->f_din_sem);
 		if (is_dead(philo))
-			exit_and_clean(philo->sim, philo->sim->philos, 1, 0);
+			exit(1);
 		usleep(2000);
 	}
 	return (NULL);

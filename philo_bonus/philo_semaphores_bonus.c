@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 23:11:09 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/02 23:34:32 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:58:56 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	unlink_sim_semaphores(void)
 	sem_unlink("/eat_c");
 }
 
-void	close_sim_semaphores(t_simulation_data *sim)
+void	close_sim_semaphores(t_sim_data *sim)
 {
 	sem_close(sim->forks);
 	sem_close(sim->print);
@@ -28,7 +28,7 @@ void	close_sim_semaphores(t_simulation_data *sim)
 	sem_close(sim->eat_c);
 }
 
-void	init_sim_semaphores(t_simulation_data *sim)
+void	init_sim_semaphores(t_sim_data *sim)
 {
 	unlink_sim_semaphores();
 	sim->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, sim->philo_c);
@@ -45,4 +45,7 @@ void	open_philo_semaphores(t_philo *philo)
 	philo->lm_sem_name = get_sem_name("/l_meal", philo);
 	sem_unlink(philo->lm_sem_name);
 	philo->lm_sem = sem_open(philo->lm_sem_name, O_CREAT | O_EXCL, 0644, 1);
+	philo->f_din_sem_n = get_sem_name("/f_din", philo);
+	sem_unlink(philo->f_din_sem_n);
+	philo->f_din_sem = sem_open(philo->f_din_sem_n, O_CREAT | O_EXCL, 0644, 1);
 }

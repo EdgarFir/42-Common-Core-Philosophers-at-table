@@ -6,22 +6,21 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 23:10:11 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/03 00:08:57 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:17:02 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static void	eat(t_simulation_data *sim, t_philo *philo)
+static void	eat(t_sim_data *sim, t_philo *philo)
 {
-
 	sem_wait(sim->forks);
 	log_message(philo, TAKE_FORK);
 	if (sim->philo_c == 1)
 	{
 		sem_wait(philo->sim->dead);
 		log_message(philo, DEAD);
-		exit_and_clean(sim, philo, sim->philo_c, 0);
+		exit(0);
 	}
 	sem_wait(sim->forks);
 	log_message(philo, TAKE_FORK);
@@ -30,13 +29,14 @@ static void	eat(t_simulation_data *sim, t_philo *philo)
 	philo->last_meal_eaten = get_timestamp_ms();
 	sem_post(philo->lm_sem);
 	my_usleep(sim->time_to_eat);
+	philo->meals_count++;
 	sem_post(sim->forks);
 	sem_post(sim->forks);
 }
 
-static int	exec_son(t_simulation_data *sim, t_philo *philo)
+static int	exec_son(t_sim_data *sim, t_philo *philo)
 {
-	pthread_t thread;
+	pthread_t	thread;
 
 	philo->philo_pid = fork();
 	if (philo->philo_pid == -1)
@@ -44,7 +44,7 @@ static int	exec_son(t_simulation_data *sim, t_philo *philo)
 	else if (philo->philo_pid == 0)
 	{
 		if (pthread_create(&thread, NULL, &death_monitor, philo) != 0)
-			exit_and_clean(sim, sim->philos, errno, 0);
+			exit(errno);
 		pthread_detach(thread);
 		while (1)
 		{
@@ -52,10 +52,9 @@ static int	exec_son(t_simulation_data *sim, t_philo *philo)
 			sem_wait(sim->eat_c);
 			eat(sim, philo);
 			sem_post(sim->eat_c);
-			philo->meals_count++;
-			if (sim->must_eat_times 
+			if (sim->must_eat_times
 				&& sim->must_eat_times == philo->meals_count)
-				exit_and_clean(sim, sim->philos, 0, 0);
+				set_dinner_end(philo);
 			log_message(philo, SLEEP);
 			my_usleep(sim->time_to_sleep);
 		}
@@ -94,7 +93,7 @@ static void	wait_for_all_philos(t_philo *philos, int philo_c)
 	}
 }
 
-void	init_sim(t_simulation_data *sim, t_philo *philos)
+void	init_sim(t_sim_data *sim, t_philo *philos)
 {
 	int		i;
 
@@ -107,7 +106,7 @@ void	init_sim(t_simulation_data *sim, t_philo *philos)
 		philos[i].id = i + 1;
 		open_philo_semaphores(&philos[i]);
 		if (exec_son(sim, &philos[i]) == -1)
-			exit_and_clean(sim, philos, errno, 1);
+			exit_clean(sim, philos, errno);
 		i++;
 	}
 	wait_for_some_philo_dead(philos, sim->philo_c);
