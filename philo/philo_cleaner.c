@@ -6,13 +6,13 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 23:09:41 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/02 17:16:16 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:36:26 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	destroy_sim_mutexes(t_simulation_data *sim)
+void	destroy_sim_mutexes(t_sim_data *sim)
 {
 	int	i;
 
@@ -66,7 +66,7 @@ void	clean_philos(t_philo *philos, int philos_count)
 	}
 }
 
-int	clean_all(t_simulation_data *sim, t_philo *philos, int exit_status)
+int	clean_all(t_sim_data *sim, t_philo *philos, int exit_status)
 {
 	clean_philos(philos, sim->nbr_of_philosophers);
 	if (sim->monitor_thread_initialized == 1)

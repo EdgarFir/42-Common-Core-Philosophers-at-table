@@ -6,24 +6,23 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:45:19 by edgar             #+#    #+#             */
-/*   Updated: 2025/07/30 23:55:03 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:39:09 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 
 # define PHILO_H
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <string.h>
-#include <sys/time.h>
-#include <errno.h>
-
 # define RED     "\033[0;31m"
 # define RESET   "\033[0m"
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <string.h>
+# include <sys/time.h>
+# include <errno.h>
 
 typedef enum s_log_types
 {
@@ -45,7 +44,7 @@ typedef enum s_log_types
 # define THREADS_CREATE_FAIL 9
 # define MUTEX_INIT_FAIL 10
 
-typedef struct	s_simulation_data
+typedef struct s_sim_data
 {
 	int				nbr_of_philosophers;
 	int				time_to_die;
@@ -60,12 +59,12 @@ typedef struct	s_simulation_data
 	int				forks_initialized;
 	long			start_time_ms;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t log_mutex;
+	pthread_mutex_t	log_mutex;
 	pthread_mutex_t	sim_end_mutex;
 	pthread_t		monitor_th;
-} t_simulation_data;
+}	t_sim_data;
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	int					id;
 	int					times_eated;
@@ -81,9 +80,8 @@ typedef struct	s_philo
 	pthread_mutex_t		last_time_eated_mutex;
 	pthread_mutex_t		*fork1;
 	pthread_mutex_t		*fork2;
-	t_simulation_data	*sim;
-} t_philo;
-
+	t_sim_data			*sim;
+}	t_philo;
 
 /* Utils */
 long long	ft_atoll(char *nbr);
@@ -92,15 +90,15 @@ long		get_timestamp_ms(void);
 void		log_message(t_philo *philo, int log_type);
 void		my_usleep(long time_ms, t_philo *philo);
 /* Validator */
-int			is_not_a_valid_sim(t_simulation_data *sim, int argc, char **argv);
+int			is_not_a_valid_sim(t_sim_data *sim, int argc, char **argv);
 /* Routine */
-void 		*routine(void *arg);
-int			sim_end(t_simulation_data *sim);
+void		*routine(void *arg);
+int			sim_end(t_sim_data *sim);
 /* Mutexes */
-int			init_mutexes(t_simulation_data *sim, t_philo *philos);
+int			init_mutexes(t_sim_data *sim, t_philo *philos);
 /* Cleaner */
-int			clean_all(t_simulation_data *sim, t_philo *philos, int exit_status);
+int			clean_all(t_sim_data *sim, t_philo *philos, int exit_status);
 /* Simulation */
-int			init_sim(t_simulation_data *sim, t_philo *philos);
+int			init_sim(t_sim_data *sim, t_philo *philos);
 
 #endif 

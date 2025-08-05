@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 00:25:07 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/31 11:39:39 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:33:09 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,12 @@ long	get_timestamp_ms(void)
 
 	if (gettimeofday(&tv, NULL) == -1)
 		return (-1);
-	return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void my_usleep(long time_ms, t_philo *philo)
+void	my_usleep(long time_ms, t_philo *philo)
 {
-	long start;
+	long	start;
 
 	start = get_timestamp_ms();
 	while (get_timestamp_ms() - start < time_ms && !sim_end(philo->sim))

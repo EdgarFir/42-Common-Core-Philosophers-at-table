@@ -6,13 +6,13 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 23:20:20 by edfreder          #+#    #+#             */
-/*   Updated: 2025/07/31 00:02:27 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:40:50 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	return_args_err_msg(t_simulation_data *sim, char *arg, int error)
+static int	return_args_err_msg(t_sim_data *sim, char *arg, int error)
 {
 	if (error == ARGS_COUNT_ERR)
 		write(2, "Usage: ./philo n_philo time_to_die time_to_eat time_to_sleep \
@@ -57,7 +57,7 @@ static int	is_a_valid_number(char *nbr)
 	return (1);
 }
 
-static void	add_sim_data(t_simulation_data *sim, int argv_index, int value)
+static void	add_sim_data(t_sim_data *sim, int argv_index, int value)
 {
 	if (argv_index == 1)
 		sim->nbr_of_philosophers = value;
@@ -71,7 +71,7 @@ static void	add_sim_data(t_simulation_data *sim, int argv_index, int value)
 		sim->must_eat_times = value;
 }
 
-int	is_not_a_valid_sim(t_simulation_data *sim, int argc, char **argv)
+int	is_not_a_valid_sim(t_sim_data *sim, int argc, char **argv)
 {
 	int			i;
 	long long	value;
