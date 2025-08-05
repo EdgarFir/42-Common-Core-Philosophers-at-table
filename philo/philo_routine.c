@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:09:01 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/05 00:55:59 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:11:32 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,19 @@ static void	time_to_sleep(t_philo *philo)
 		return ;
 	log_message(philo, SLEEP);
 	my_usleep(philo->sim->time_to_sleep, philo);
+}
+
+int	ate_all_meals(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->times_eated_mutex);
+	if (philo->sim->must_eat_times
+		&& philo->sim->must_eat_times == philo->times_eated)
+	{
+		pthread_mutex_unlock(&philo->times_eated_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->times_eated_mutex);
+	return (0);
 }
 
 static int	time_to_eat(t_philo *philo)
@@ -68,16 +81,8 @@ void	*routine(void *arg)
 		usleep(philo->sim->time_to_eat * 1000);
 	while (!sim_end(philo->sim))
 	{
-		if (sim_end(philo->sim))
-			break ;
-		pthread_mutex_lock(&philo->times_eated_mutex);
-		if (philo->sim->must_eat_times
-			&& philo->sim->must_eat_times == philo->times_eated)
-		{
-			pthread_mutex_unlock(&philo->times_eated_mutex);
+		if (sim_end(philo->sim) || ate_all_meals(philo))
 			return (NULL);
-		}
-		pthread_mutex_unlock(&philo->times_eated_mutex);
 		if (!sim_end(philo->sim))
 			log_message(philo, THINK);
 		if (philo->sim->nbr_of_philosophers == 1)

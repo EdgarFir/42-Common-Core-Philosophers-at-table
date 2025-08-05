@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 21:45:19 by edgar             #+#    #+#             */
-/*   Updated: 2025/08/04 22:39:09 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:41:29 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void		log_message(t_philo *philo, int log_type);
 void		my_usleep(long time_ms, t_philo *philo);
 /* Validator */
 int			is_not_a_valid_sim(t_sim_data *sim, int argc, char **argv);
+void		set_sim_end(t_sim_data *sim);
 /* Routine */
 void		*routine(void *arg);
 int			sim_end(t_sim_data *sim);

@@ -6,26 +6,11 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 00:07:10 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/04 22:37:06 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:41:16 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static int	create_threads(t_sim_data *sim, t_philo *philos)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->nbr_of_philosophers)
-	{
-		if (pthread_create(&philos[i].th, NULL, &routine, &philos[i]) != 0)
-			return (THREADS_CREATE_FAIL);
-		philos[i].thread_initialized = 1;
-		i++;
-	}
-	return (0);
-}
 
 static int	is_dead(t_philo *philo)
 {
@@ -82,26 +67,20 @@ static void	*monitor(void *arg)
 {
 	t_philo	*philos;
 	int		i;
-	int		max_index;
 
 	philos = (t_philo *)arg;
 	i = 0;
-	max_index = philos->sim->nbr_of_philosophers;
 	while (1)
 	{
 		if (all_ate(&philos[0], philos->sim->must_eat_times))
 		{
-			pthread_mutex_lock(&philos->sim->sim_end_mutex);
-			philos->sim->sim_end = 1;
-			pthread_mutex_unlock(&philos->sim->sim_end_mutex);
+			set_sim_end(philos->sim);
 			return (NULL);
 		}
-		if (is_dead(&philos[i % max_index]))
+		if (is_dead(&philos[i % philos->sim->nbr_of_philosophers]))
 		{
-			pthread_mutex_lock(&philos->sim->sim_end_mutex);
-			philos->sim->sim_end = 1;
-			pthread_mutex_unlock(&philos->sim->sim_end_mutex);
-			log_message(&philos[i % max_index], DEAD);
+			set_sim_end(philos->sim);
+			log_message(&philos[i % philos->sim->nbr_of_philosophers], DEAD);
 			return (NULL);
 		}
 		usleep(100);
@@ -110,7 +89,7 @@ static void	*monitor(void *arg)
 	return (arg);
 }
 
-void	sit_philos_at_table(t_sim_data *sim, t_philo *philos)
+static void	sit_philos_at_table(t_sim_data *sim, t_philo *philos)
 {
 	int	i;
 
@@ -140,10 +119,18 @@ void	sit_philos_at_table(t_sim_data *sim, t_philo *philos)
 
 int	init_sim(t_sim_data *sim, t_philo *philos)
 {
+	int	i;
+
 	sit_philos_at_table(sim, philos);
 	sim->start_time_ms = get_timestamp_ms();
-	if (create_threads(sim, philos) == THREADS_CREATE_FAIL)
-		return (THREADS_CREATE_FAIL);
+	i = 0;
+	while (i < sim->nbr_of_philosophers)
+	{
+		if (pthread_create(&philos[i].th, NULL, &routine, &philos[i]) != 0)
+			return (THREADS_CREATE_FAIL);
+		philos[i].thread_initialized = 1;
+		i++;
+	}
 	if (pthread_create(&sim->monitor_th, NULL, &monitor, philos) != 0)
 		return (THREADS_CREATE_FAIL);
 	sim->monitor_thread_initialized = 1;

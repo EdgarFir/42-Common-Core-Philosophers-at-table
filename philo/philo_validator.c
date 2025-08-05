@@ -6,7 +6,7 @@
 /*   By: edfreder <edfreder@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 23:20:20 by edfreder          #+#    #+#             */
-/*   Updated: 2025/08/04 22:40:50 by edfreder         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:41:13 by edfreder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,11 @@ int	is_not_a_valid_sim(t_sim_data *sim, int argc, char **argv)
 		i++;
 	}
 	return (0);
+}
+
+void	set_sim_end(t_sim_data *sim)
+{
+	pthread_mutex_lock(&sim->sim_end_mutex);
+	sim->sim_end = 1;
+	pthread_mutex_unlock(&sim->sim_end_mutex);
 }
